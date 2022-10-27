@@ -1,0 +1,22 @@
+- name: Add docker repo
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install docker
+  ansible.builtin.package:
+    name: "{{ docker_package }}"
+    state: latest
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-compose-plugin
+  loop_control:
+    loop_var: docker_package
+
+- name: Start docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes

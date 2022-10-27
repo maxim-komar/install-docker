@@ -1,0 +1,39 @@
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ package_required_for_docker }}"
+    state: latest
+  loop:
+    - ca-certificates
+    - curl
+    - gnupg
+    - lsb-release
+  loop_control:
+    loop_var: package_required_for_docker
+
+- name: Add docker GPG apt key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add docker repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: Install docker
+  ansible.builtin.package:
+    name: "{{ docker_package }}"
+    state: latest
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-compose-plugin
+  loop_control:
+    loop_var: docker_package
+
+- name: Start docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes

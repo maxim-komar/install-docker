@@ -1,0 +1,4 @@
+current_user:
+  name: "{{ lookup('env', 'USER') }}"
+docker:
+  group: docker

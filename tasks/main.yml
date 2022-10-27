@@ -1,0 +1,8 @@
+- name: Install docker
+  ansible.builtin.import_tasks: docker.yml
+
+- name: "Add user {{ current_user.name }} to docker group"
+  ansible.builtin.user:
+    name: "{{ current_user.name }}"
+    groups: "{{ docker.group }}"
+    append: yes
